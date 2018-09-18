@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+    <title>{{ title }} -- FlaskBlog</title>
+    {% else %}
+        <title>Welcome to FlaskBlog</title>
+    {% endif %}
+</head>
+<body>
+    <div>Microblog: <a href="/index">Home</a></div>
+    <hr>
+{% block custom_content %}
+    
+
+{% endblock %}
+</body>
+</html>
