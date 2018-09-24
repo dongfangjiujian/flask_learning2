@@ -1,9 +1,9 @@
 from app import app
 from flask import render_template,redirect,flash,url_for,request
-from app.forms import LoginForm
+from app.forms import LoginForm,RegistrationForm
 from werkzeug.urls import url_parse
 # 登录视图中需要验证用户 所以需要import User模型
-from app.models import User
+from app.models import User,db
 # 用户登录 登出 需要用到Flask_login的login_user 和 logout_user函数 和current_user属性来储存当前用户
 from flask_login import login_user,logout_user,current_user,login_required
 
@@ -40,3 +40,16 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/register',methods=['post','get'])
+def register():
+    form = RegistrationForm()
+    #  form.validate_on_submit 提交过后 其实validate_username 和 validate_email都已经验证
+    if form.validate_on_submit():
+        #添加新用户到数据库  和shell中的操作一样
+        new_user = User(username = form.username.data,password = form.password.data,email = form.email.data)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('注册成功！')
+        return redirect(url_for('login'))
+    return render_template('register.html',form = form,title= '注册页面')

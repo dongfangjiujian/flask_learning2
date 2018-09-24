@@ -60,3 +60,47 @@ def login():
             next_page = url_for('index')
         return redirect(next_page)
     # ...
+#####################################################
+用户注册 逻辑
+1· 如同LoginForm 一样 先建立RegisterForm 并继承FlaskForm类
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError('Please use a different username.')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is not None:
+            raise ValidationError('Please use a different email address.')
+
+添加了两个自定义数据验证 validate_username 和 validate_email.  格式是 validate_<field_name>的函数，WTForms会自己加入到表单验证中
+
+2·在视图中建立register视图  首先需要 from app.forms import RegisterForm
+from app import db
+from app.forms import RegistrationForm
+
+# ...
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    # 同样需要在 form.validate_on_submit()中写入数据库   自定义的validate_username 和 email 系统会自动验证
+    if form.validate_on_submit():
+    # 和在shell中的操作一样建立用户  db.session.add   db.session.commit
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
