@@ -6,9 +6,9 @@ class Config(object):
     # print('hello')
     # SQLALCHEMY_DATEBASE_URI = os.environ.get('DATEBASE_URI') or 'sqlite:///' + os.path.join(basedir,'app.db')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
-    SQLALCHEMY_BINDS = {
-        'users':        'mysqldb://localhost/users',
-        'app':      os.environ.get('DATEBASE_URI') or 'sqlite:///' + os.path.join(basedir,'app.db')
-    }
+    # SQLALCHEMY_BINDS = {
+    #     'users':        'mysqldb://localhost/users',
+    #     'app':      os.environ.get('DATEBASE_URI') or 'sqlite:///' + os.path.join(basedir,'app.db')
+    # }
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

@@ -1,7 +1,10 @@
 from app import db
 from datetime import datetime
-
-class User(db.Model):
+# @login.user_loader修饰器在 __init__.py   login=LoginManger(app)的login中  需要先import
+from app import login
+from flask_login import UserMixin
+# UserMixin 包含了flask login 的各种方法和属性 可以直接放在User类中实现
+class User(UserMixin,db.Model):
     id = db.Column(db.Integer,primary_key=True)
     username = db.Column(db.String(64),index=True,unique=True)
     email = db.Column(db.String(128),unique=True)
@@ -11,6 +14,12 @@ class User(db.Model):
     posts = db.relationship('Post',backref = 'author',lazy = 'dynamic')
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+# Flask login 再session中记录登录用户，但是对用户数据库并不了解 所以需要用@login.user_loader装饰器来注册用户，让flask login能够认识到数据库
+@login.user_loader
+def user_loader(id):
+    return User.query.get(int(id))
+
 
 class Post(db.Model):
     id = db.Column(db.Integer,primary_key=True)
