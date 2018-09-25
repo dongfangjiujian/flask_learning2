@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField,StringField,PasswordField,BooleanField,TextAreaField
 from wtforms.validators import DataRequired,Email,EqualTo,Length
 
-from app.models import db,User
+from app.models import db,User,Post
 
 class LoginForm(FlaskForm):
 
@@ -44,3 +44,13 @@ class EditProfileForm(FlaskForm):
             user = User.query.filter_by(username = username.data).first()
             if user is not None:
                 raise ValueError('该用户名已被注册！')
+
+class PostForm(FlaskForm):
+    title = StringField('标题',validators=[DataRequired()])
+    content = TextAreaField('内容',validators=[Length(max=400,min=2)])
+    submit  = SubmitField('发布文章')
+
+    # def validate_title(self,title):
+    #     post = Post.query.filter_by(title = self.title.data).first()
+    #     if post is not None:
+    #         raise ValueError('该标题已存在')

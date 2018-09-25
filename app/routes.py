@@ -1,19 +1,27 @@
 from app import app
 from flask import render_template,redirect,flash,url_for,request
-from app.forms import LoginForm,RegistrationForm,EditProfileForm
+from app.forms import LoginForm,RegistrationForm,EditProfileForm,PostForm
 from werkzeug.urls import url_parse
 from datetime import datetime
 # 登录视图中需要验证用户 所以需要import User模型
-from app.models import User,db
+from app.models import User,db,Post
 # 用户登录 登出 需要用到Flask_login的login_user 和 logout_user函数 和current_user属性来储存当前用户
 from flask_login import login_user,logout_user,current_user,login_required
 
-@app.route('/')
-@app.route('/index')
+@app.route('/',methods=['GET','POST'])
+@app.route('/index',methods=['GET','POST'])
 # flask-login 访问权限判定 需要用到@login_required装饰器  放到其他装饰器下面，因为装饰器是从下向上的
 @login_required
 def index():
-    return render_template('index.html',username = '左旭')
+    form = PostForm()
+    posts = Post.query.all()
+    if form.validate_on_submit():
+        post = Post(title = form.title.data,content = form.content.data,author =current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('文章一发不!')
+        return redirect(url_for('index'))
+    return render_template('index.html',form = form,posts = posts,username = '左旭')
 
 @app.route('/login',methods=['POST','GET'])
 def login():
@@ -61,10 +69,7 @@ def register():
 def user(username):
     #首先需要查询数据库，将用户对象找到
     user = User.query.filter_by(username = username).first()
-    posts = [
-        {'author':user,'body':'Test post #1'},
-        {'author':user,'body':'Test post #2'}
-    ]
+    posts =user.posts
     return render_template('user.html',user = user,posts = posts)
 
 
@@ -90,3 +95,13 @@ def editProfile():
 
     return  render_template('editProfile.html',form = form,title = 'EditProfile')
 
+# @app.route('/post',methods=['POST'])
+# def postArtical():
+#     form = PostForm()
+#     if form.validate_on_submit():
+#         post = Post(title = form.title.data,content = form.content.data)
+#         db.session.add(post)
+#         db.session.commit()
+#         flash('文章一发不!')
+#         return redirect(url_for('index'))
+#     return render_template('index.html',form = form)
