@@ -15,7 +15,10 @@
         <a href="{{ url_for('login') }}">login</a>
             <a href="{{ url_for('register') }}">注册</a>
         {% else %}
-            {# 带参数的url跳转 后面的参数 需要用表达式传递参数  username = .....  其中 username就是试图函数中的参数名称 #}
+            {# 带参数的url跳转 后面的参数 需要用表达式传递参数  username = .....  其中 username就是试图函数中的参数名称 这里需要注意  自己在能修改自己的 不能修改别人的#}
+
+
+
             <a href="{{ url_for('user',username =current_user.username) }}">个人资料</a>
             <a href="{{ url_for('logout') }}">logout</a>
         {% endif %}

@@ -3,7 +3,10 @@
 <h1>{{ user.username }}</h1>
     <h3>last_seen:{{ user.last_seen }}</h3>
     <h3>about_me:{{ user.about_me }}</h3>
-    <a href="{{ url_for('editProfile') }}">修改档案</a>
+    {% if user==current_user %}
+        <a href="{{ url_for('editProfile') }}">修改档案</a>
+    {% endif %}
+
     <h2>Posts:</h2>
     {% for p in posts %}
     {% include '_postArtical.html' %}
