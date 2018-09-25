@@ -34,7 +34,13 @@ class EditProfileForm(FlaskForm):
     about_me = TextAreaField('自我介绍',validators=[Length(min=0,max=200)])
     submit =SubmitField('提交')
 
+    def __init__(self,original_name,*args,**kwargs):
+        # super(EditProfileForm,self)是重新加载一次泪，是累能接受original_name这个参数
+        super(EditProfileForm,self).__init__(*args,**kwargs)
+        self.original_name = original_name
+
     def validate_username(self,username):
-        user = User.query.filter_by(username = username.data).first()
-        if user is not None:
-            raise ValueError('该用户名已被注册！')
+        if username.data != self.original_name:
+            user = User.query.filter_by(username = username.data).first()
+            if user is not None:
+                raise ValueError('该用户名已被注册！')

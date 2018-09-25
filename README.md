@@ -142,3 +142,35 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
+
+
+
+########################################################
+修改用户档案还有问题存在
+当用户名没有改变的情况下，提交也会显示该用户已存在
+
+需要修改的地方有两处
+1·forms.py 中
+需要重载EditProfileForm是其接受一个变量orginal_name来存储当前用户的名称
+class EditProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
+    submit = SubmitField('Submit')
+#这一段用super对class进行了重载
+    def __init__(self, original_username, *args, **kwargs):
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+        self.original_username = original_username
+
+    def validate_username(self, username):
+        if username.data != self.original_username:
+            user = User.query.filter_by(username=self.username.data).first()
+            if user is not None:
+                raise ValidationError('Please use a different username.')
+后续判断是要判断修改的用户名是否等于初始用户名  等于则接受修改 否则查询数据库判断用户是否存在
+2·需要修改试图函数
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm(current_user.username)
+    # ...
+    让试图函数接受当前用户名称

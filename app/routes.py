@@ -77,7 +77,7 @@ def before_request():
 #自我介绍 以及名字修改 EditProfile
 @app.route('/editProfile',methods=['post','get'])
 def editProfile():
-    form = EditProfileForm()
+    form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about_me = form.about_me.data
