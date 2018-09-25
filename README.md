@@ -104,3 +104,41 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+######################################################################
+用户档案以及修改个人介绍
+
+对于设计表单的页面 工作流程大致如下：
+1·首先在Form.py 中建立相应的表单
+class EditProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
+    submit = SubmitField('Submit')
+    #不要忘记相应的验证函数  每个表单需要单独添加 在form.validate_on_submit中才能应用
+    def validate_username(self,username):
+        user = User.query.filter_by(username = username.data).first()
+        if user is not None:
+            raise ValueError('该用户名已被注册！')
+
+2·完成试图函数  @app.route()
+首先 import 相应的表单Form
+其次 在validate_on_submit()中 写入逻辑部分
+最后 船只给模板 form=form
+from app.forms import EditProfileForm
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.about_me = form.about_me.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('edit_profile'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.about_me.data = current_user.about_me
+    return render_template('edit_profile.html', title='Edit Profile',
+                           form=form)

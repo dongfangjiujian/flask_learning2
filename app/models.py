@@ -9,6 +9,8 @@ class User(UserMixin,db.Model):
     username = db.Column(db.String(64),index=True,unique=True)
     email = db.Column(db.String(128),unique=True)
     password =db.Column(db.String(128))
+    about_me = db.Column(db.String(256))
+
     # 一对多的关系中，要在一这一面建立关系view
     # 在定义关系时，第一个参数是建立关系的数据表的类名Post，要大写
     posts = db.relationship('Post',backref = 'author',lazy = 'dynamic')

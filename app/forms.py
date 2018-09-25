@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField,StringField,PasswordField,BooleanField
-from wtforms.validators import DataRequired,Email,EqualTo
+from wtforms import SubmitField,StringField,PasswordField,BooleanField,TextAreaField
+from wtforms.validators import DataRequired,Email,EqualTo,Length
+
 from app.models import db,User
 
 class LoginForm(FlaskForm):
@@ -24,6 +25,14 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email = email.data).first()
         if user is not None:
             raise ValueError('该邮箱已被注册！')
+
+
+
+#首先建立修改用户信息的表单
+class EditProfileForm(FlaskForm):
+    username =StringField('用户名',validators=[DataRequired()])
+    about_me = TextAreaField('自我介绍',validators=[Length(min=0,max=200)])
+    submit =SubmitField('提交')
 
     def validate_username(self,username):
         user = User.query.filter_by(username = username.data).first()
