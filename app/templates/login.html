@@ -1,26 +1,31 @@
 {% extends "base.html" %}
-
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block custom_content %}
-    <form action="" method="post" novalidate>
-    {{ form.hidden_tag()}}
-    <p>{{ form.username.label }}</p>
-    <p>{{ form.username }}</p>
-        {% for error in form.username.errors %}
-            <span>{{ error }}</span>
-
-        {% endfor %}
-
-    <p>{{ form.password.label}}</p>
-    <p>{{ form.password }}</p>
-    {% for error in form.password.errors %}
-        <span>{{ error }}</span>
-
-    {% endfor %}
-
-    <p>{{ form.remember_me }}</p>
-    <p>{{ form.submit }}</p>
-        <a href="{{ url_for('register') }}">注册</a>
-    </form>
+    <div class="row">
+        <div class="col-md-3">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+{#    <form action="" method="post" novalidate>#}
+{#    {{ form.hidden_tag()}}#}
+{#    <p>{{ form.username.label }}</p>#}
+{#    <p>{{ form.username }}</p>#}
+{#        {% for error in form.username.errors %}#}
+{#            <span>{{ error }}</span>#}
+{##}
+{#        {% endfor %}#}
+{##}
+{#    <p>{{ form.password.label}}</p>#}
+{#    <p>{{ form.password }}</p>#}
+{#    {% for error in form.password.errors %}#}
+{#        <span>{{ error }}</span>#}
+{##}
+{#    {% endfor %}#}
+{##}
+{#    <p>{{ form.remember_me }}</p>#}
+{#    <p>{{ form.submit }}</p>#}
+{#        <a href="{{ url_for('register') }}">注册</a>#}
+{#    </form>#}
 
 {% endblock %}

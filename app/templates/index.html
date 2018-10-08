@@ -1,28 +1,33 @@
 {%  extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 {% block custom_content  %}
 
     <h1>HEllO {{ current_user.username }}</h1>
     <hr>
-    <form action="", method="post">
-    {{ form.hidden_tag() }}
-    <p>{{ form.title.label }}:{{ form.title }}</p>
-        {% for error in form.title.errors %}
-        <p>{{ error }}</p>
-        {% endfor %}
+{#    <form action="", method="post">#}
+{#    {{ form.hidden_tag() }}#}
+{#    <p>{{ form.title.label }}:{{ form.title }}</p>#}
+{#        {% for error in form.title.errors %}#}
+{#        <p>{{ error }}</p>#}
+{#        {% endfor %}#}
+{##}
+{#    <p>{{ form.content.label }}:{{ form.content }}</p>#}
+{#        {% for error in form.content.errors %}#}
+{#            <p>{{ error }}</p>#}
+{#        {% endfor %}#}
+{#        <p>{{ form.submit }}</p>#}
+{#    </form>#}
+    <div class="row">
+        <div class="col-md-7 ">
+            {{ wtf.quick_form(form) }}
+            {% for p in posts %}
+                {% include '_postArtical.html' %}
 
-    <p>{{ form.content.label }}:{{ form.content }}</p>
-        {% for error in form.content.errors %}
-            <p>{{ error }}</p>
-        {% endfor %}
-        <p>{{ form.submit }}</p>
-    </form>
-    <hr>
-    {% for post in posts %}
-        <div><h3>标题：{{ post.title  }}</h3>
-        <span>作者：{{ post.author.username }}</span>
-        <p>内容：{{ post.content }}</p>
+            {% endfor %}
         </div>
-    {% endfor %}
+    </div>
+
+    <hr>
 
 
 

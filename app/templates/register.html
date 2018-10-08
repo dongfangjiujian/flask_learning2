@@ -1,35 +1,42 @@
 {% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
 {% block custom_content %}
-
-    <form action="" method="post">
-     {{ form.hidden_tag() }}
-    <p>{{ form.username.label  }}:
-        {{ form.username }}
-        {% for err in form.username.errors %}
-            <span>{{ err }}</span>
-        {% endfor %}</p>
-
-<p> {{ form.password.label  }}:
-        {{ form.password }}
-
-        {% for err in form.password.errors %}
-            <span>{{ err }}</span>
-        {% endfor %}</p>
-
-<p>{{ form.password2.label  }}:
-        {{ form.password2 }}
-
-        {% for err in form.password2.errors %}
-            <span>{{ err }}</span>
-        {% endfor %}</p>
-
-<p>{{ form.email.label  }}:
-        {{ form.email }}
-    {% for err in form.email.errors %}
-
-            <span>{{ err }}</span>
-        {% endfor %}</p>
- <p>{{ form.submit }}</p>
-
-    </form>
+    <h1>注册</h1>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+{#没用bootstrap之前的表格建立方法#}
+{#    <form action="" method="post">#}
+{#     {{ form.hidden_tag() }}#}
+{#    <p>{{ form.username.label  }}:#}
+{#        {{ form.username }}#}
+{#        {% for err in form.username.errors %}#}
+{#            <span>{{ err }}</span>#}
+{#        {% endfor %}</p>#}
+{##}
+{#<p> {{ form.password.label  }}:#}
+{#        {{ form.password }}#}
+{##}
+{#        {% for err in form.password.errors %}#}
+{#            <span>{{ err }}</span>#}
+{#        {% endfor %}</p>#}
+{##}
+{#<p>{{ form.password2.label  }}:#}
+{#        {{ form.password2 }}#}
+{##}
+{#        {% for err in form.password2.errors %}#}
+{#            <span>{{ err }}</span>#}
+{#        {% endfor %}</p>#}
+{##}
+{#<p>{{ form.email.label  }}:#}
+{#        {{ form.email }}#}
+{#    {% for err in form.email.errors %}#}
+{##}
+{#            <span>{{ err }}</span>#}
+{#        {% endfor %}</p>#}
+{# <p>{{ form.submit }}</p>#}
+{##}
+{#    </form>#}
 {% endblock %}
